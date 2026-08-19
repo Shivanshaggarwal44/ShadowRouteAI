@@ -38,10 +38,22 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// 404 handler
-app.use((req, res) => {
+// Serve static frontend in production
+const path = require('path');
+const clientDistPath = path.join(__dirname, '../client/dist');
+if (require('fs').existsSync(clientDistPath)) {
+  app.use(express.static(clientDistPath));
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api/')) return next();
+    res.sendFile(path.join(clientDistPath, 'index.html'));
+  });
+}
+
+// 404 handler for API routes
+app.use('/api', (req, res) => {
   res.status(404).json({ success: false, message: 'API Endpoint Not Found' });
 });
+
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`[ShadowRoute Server] Running on http://localhost:${PORT}`);
