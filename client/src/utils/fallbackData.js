@@ -133,6 +133,25 @@ export const fallbackRoutes = [
   }
 ];
 
+export const getAdaptedFallbackRoutes = (userLat, userLng) => {
+  if (!userLat || !userLng || !Number.isFinite(userLat) || !Number.isFinite(userLng)) {
+    return fallbackRoutes;
+  }
+
+  return fallbackRoutes.map(route => {
+    const baseLat = route.coordinates[0][0];
+    const baseLng = route.coordinates[0][1];
+    const adaptedCoordinates = route.coordinates.map(pt => [
+      userLat + (pt[0] - baseLat),
+      userLng + (pt[1] - baseLng)
+    ]);
+    return {
+      ...route,
+      coordinates: adaptedCoordinates
+    };
+  });
+};
+
 export const fallbackAISuggestion = {
   title: 'Recommended: Grand Boulevard & Tech Corridor',
   summary: 'Shadow AI analyzed hidden risks, lighting density, and historical police reports. Grand Boulevard & Tech Corridor achieves an 89/100 Safety Score (Safe), compared to Underpass Shortcut (42/100 High Risk).',

@@ -97,9 +97,16 @@ function rankRoutesByPreference(routes, safetyPriorityRatio = 75, timeOfDay = 'e
     const timeMultiplier = timeOfDay === 'late_night' ? 0.9 : timeOfDay === 'evening' ? 1.05 : 1.1;
     const adjustedEta = Math.round(route.baseEtaMinutes * timeMultiplier);
 
-    let adaptedCoordinates = [...route.coordinates];
-    if (liveCoords && liveCoords.lat && liveCoords.lng) {
-      adaptedCoordinates[0] = [Number(liveCoords.lat), Number(liveCoords.lng)];
+    let adaptedCoordinates = route.coordinates;
+    if (liveCoords && Number.isFinite(Number(liveCoords.lat)) && Number.isFinite(Number(liveCoords.lng))) {
+      const lat = Number(liveCoords.lat);
+      const lng = Number(liveCoords.lng);
+      const baseLat = route.coordinates[0][0];
+      const baseLng = route.coordinates[0][1];
+      adaptedCoordinates = route.coordinates.map(pt => [
+        lat + (pt[0] - baseLat),
+        lng + (pt[1] - baseLng)
+      ]);
     }
 
     return {

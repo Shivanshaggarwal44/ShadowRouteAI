@@ -6,7 +6,7 @@ import {
   getIncidentsAPI,
   triggerSOSAPI
 } from '../services/api';
-import { fallbackRoutes, fallbackAISuggestion } from '../utils/fallbackData';
+import { fallbackRoutes, fallbackAISuggestion, getAdaptedFallbackRoutes } from '../utils/fallbackData';
 
 const AppContext = createContext();
 
@@ -97,19 +97,22 @@ export const AppProvider = ({ children }) => {
         const recommended = res.routes.find(r => r.isRecommended) || res.routes[0];
         setSelectedRoute(recommended);
       } else {
-        setRoutes(fallbackRoutes);
+        const adaptedFallback = getAdaptedFallbackRoutes(lat, lng);
+        setRoutes(adaptedFallback);
         setAiSuggestion(fallbackAISuggestion);
-        setSelectedRoute(fallbackRoutes[0]);
+        setSelectedRoute(adaptedFallback[0]);
       }
     } catch (err) {
       console.warn('Backend API connection warning, using fallback routes:', err.message);
-      setRoutes(fallbackRoutes);
+      const adaptedFallback = getAdaptedFallbackRoutes(lat, lng);
+      setRoutes(adaptedFallback);
       setAiSuggestion(fallbackAISuggestion);
-      setSelectedRoute(fallbackRoutes[0]);
+      setSelectedRoute(adaptedFallback[0]);
     } finally {
       setIsAnalyzing(false);
     }
   };
+
 
   // Run initial analysis once liveLocation lat/lng is ready
   useEffect(() => {
