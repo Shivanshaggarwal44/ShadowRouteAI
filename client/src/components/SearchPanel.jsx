@@ -4,7 +4,7 @@ import { useApp } from '../context/AppContext';
 
 const SearchPanel = ({ onSearchComplete }) => {
   const { origin, destination, setDestination, setDestinationCoords, runRouteAnalysis, liveLocation, safetyPriority, timeOfDay } = useApp();
-  
+
   const [originInput, setOriginInput] = useState('Your current location');
   const [destinationInput, setDestinationInput] = useState(destination || '');
   const [isSearching, setIsSearching] = useState(false);
@@ -70,7 +70,7 @@ const SearchPanel = ({ onSearchComplete }) => {
 
   return (
     <div className="bg-white/95 backdrop-blur-md rounded-2xl p-5 border border-slate-200 shadow-xl space-y-4 font-sans text-slate-800">
-      
+
       <div className="space-y-3">
         {/* Step 1: Starting point */}
         <div className="space-y-1">

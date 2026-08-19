@@ -22,13 +22,12 @@ const EmergencyButton = ({ size = 'normal', floating = false }) => {
     <>
       <button
         onClick={() => setModalOpen(true)}
-        className={`font-mono font-extrabold tracking-wider transition-all duration-300 active:scale-95 shadow-2xl ${
-          floating
+        className={`font-mono font-extrabold tracking-wider transition-all duration-300 active:scale-95 shadow-2xl ${floating
             ? 'fixed bottom-6 right-6 z-50 p-4 rounded-full bg-red-600 hover:bg-red-500 text-white shadow-red-600/50 border-2 border-red-400 animate-pulse'
             : sosActive
-            ? 'bg-red-600 text-white animate-pulse shadow-red-500/80 ring-4 ring-red-500/50 px-4 py-2.5 rounded-2xl text-xs'
-            : 'bg-gradient-to-r from-red-600 via-rose-600 to-red-700 text-white hover:from-red-500 hover:to-rose-500 shadow-red-600/40 border border-red-500/50 px-4 py-2.5 rounded-2xl text-xs flex items-center gap-2'
-        }`}
+              ? 'bg-red-600 text-white animate-pulse shadow-red-500/80 ring-4 ring-red-500/50 px-4 py-2.5 rounded-2xl text-xs'
+              : 'bg-gradient-to-r from-red-600 via-rose-600 to-red-700 text-white hover:from-red-500 hover:to-rose-500 shadow-red-600/40 border border-red-500/50 px-4 py-2.5 rounded-2xl text-xs flex items-center gap-2'
+          }`}
       >
         <span className="relative flex h-3 w-3 inline-block">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
@@ -41,7 +40,7 @@ const EmergencyButton = ({ size = 'normal', floating = false }) => {
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-150">
           <div className="w-full max-w-sm glass-panel rounded-3xl p-6 border-2 border-red-500/60 shadow-2xl shadow-red-500/40 text-center space-y-4 relative">
-            
+
             <button
               onClick={() => setModalOpen(false)}
               className="absolute top-4 right-4 text-slate-400 hover:text-slate-200 p-1 rounded-lg"
