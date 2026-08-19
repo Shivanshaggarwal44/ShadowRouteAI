@@ -5,24 +5,21 @@ const path = require('path');
 
 const repoDir = path.resolve(__dirname, '..'); // project root: c:\Users\Gaurav Aggarwal\OneDrive\Documents\hackathon safety prompt verse
 const remoteUrl = 'https://github.com/Shivanshaggarwal44/ShadowRoute-AI-.git';
+const token = process.env.GITHUB_TOKEN || process.argv[2];
 
 async function run() {
   console.log('Project directory:', repoDir);
   console.log('Target Remote URL:', remoteUrl);
 
   try {
-    // 1. Init git repo if needed
     await git.init({ fs, dir: repoDir, defaultBranch: 'main' });
-    console.log('Git initialized.');
-
-    // 2. Add remote origin
+    
     try {
       await git.addRemote({ fs, dir: repoDir, remote: 'origin', url: remoteUrl, force: true });
     } catch (e) {
-      console.log('Remote note:', e.message);
+      // ignore if exists
     }
 
-    // 3. Stage all files recursively except node_modules, dist, .git
     async function stageDir(dir) {
       const entries = fs.readdirSync(dir, { withFileTypes: true });
       for (const entry of entries) {
@@ -43,9 +40,7 @@ async function run() {
 
     console.log('Staging files...');
     await stageDir(repoDir);
-    console.log('Files staged successfully.');
 
-    // 4. Commit
     const sha = await git.commit({
       fs,
       dir: repoDir,
@@ -57,7 +52,6 @@ async function run() {
     });
     console.log('Committed SHA:', sha);
 
-    // 5. Push to main
     console.log('Pushing to main branch...');
     const pushResult = await git.push({
       fs,
@@ -65,11 +59,19 @@ async function run() {
       dir: repoDir,
       remote: 'origin',
       ref: 'main',
-      force: true
+      force: true,
+      onAuth: () => ({
+        username: token || 'Shivanshaggarwal44',
+        password: token || ''
+      })
     });
-    console.log('Push Result:', pushResult);
+    console.log('✓ Successfully pushed to GitHub main branch!', pushResult);
   } catch (err) {
-    console.error('Git execution error:', err);
+    if (err.data && err.data.statusCode === 401) {
+      console.log('AUTH_REQUIRED: GitHub Personal Access Token is needed for remote write access.');
+    } else {
+      console.error('Git execution error:', err.message);
+    }
   }
 }
 
